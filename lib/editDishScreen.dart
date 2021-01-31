@@ -20,10 +20,12 @@ class _EditDishScreenState extends State<EditDishScreen> {
   File image = null;
   final picker = ImagePicker();
   TextEditingController nameController;
+  TextEditingController creditController;
   bool isLoading = false;
 
   initState() {
     nameController = TextEditingController(text: widget.dish.name);
+    creditController = TextEditingController(text: widget.dish.credit);
     super.initState();
   }
 
@@ -89,6 +91,7 @@ class _EditDishScreenState extends State<EditDishScreen> {
                         maxWidth: 4160);
                     if (pickedFile != null) {
                       File croppedFile = await ImageCropper.cropImage(
+                          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
                           sourcePath: pickedFile.path,
                           maxHeight: 3120,
                           maxWidth: 4160,
@@ -162,7 +165,15 @@ class _EditDishScreenState extends State<EditDishScreen> {
                 SizedBox(height: ScreenUtil().setHeight(20)),
                 TextField(
                   controller: nameController,
-                  decoration: InputDecoration(hintText: 'Dish Name'),
+                  decoration: InputDecoration(
+                      hintText: 'Dish Name',
+                      contentPadding: EdgeInsets.only(left: 10)),
+                ),
+                TextField(
+                  controller: creditController,
+                  decoration: InputDecoration(
+                      hintText: 'Credit',
+                      contentPadding: EdgeInsets.only(left: 10)),
                 )
               ],
             )),
@@ -189,7 +200,8 @@ class _EditDishScreenState extends State<EditDishScreen> {
                       .doc(widget.dish.id)
                       .set({
                     'name': nameController.text,
-                    'imageURL': image == null ? widget.dish.imageURL : imageURL
+                    'imageURL': image == null ? widget.dish.imageURL : imageURL,
+                    'credit': creditController.text
                   });
 
                   Navigator.of(context).pop();

@@ -17,6 +17,7 @@ class _AddDishState extends State<AddDish> {
   File image = null;
   final picker = ImagePicker();
   TextEditingController nameController = TextEditingController();
+  TextEditingController creditController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -43,14 +44,15 @@ class _AddDishState extends State<AddDish> {
                       maxWidth: 4160);
                   if (pickedFile != null) {
                     File croppedFile = await ImageCropper.cropImage(
+                        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
                         sourcePath: pickedFile.path,
                         maxHeight: 3120,
                         maxWidth: 4160,
                         aspectRatioPresets: Platform.isAndroid
                             ? [
-                                CropAspectRatioPreset.square,
-                                CropAspectRatioPreset.ratio3x2,
                                 CropAspectRatioPreset.original,
+                                CropAspectRatioPreset.ratio3x2,
+                                CropAspectRatioPreset.square,
                                 CropAspectRatioPreset.ratio4x3,
                                 CropAspectRatioPreset.ratio16x9
                               ]
@@ -118,6 +120,11 @@ class _AddDishState extends State<AddDish> {
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(hintText: 'Dish Name'),
+              ),
+              SizedBox(height: ScreenUtil().setHeight(20)),
+              TextField(
+                controller: creditController,
+                decoration: InputDecoration(hintText: 'Credits'),
               )
             ],
           )),
@@ -141,10 +148,12 @@ class _AddDishState extends State<AddDish> {
                     .putFile(image);
                 String imageURL = await ref.ref.getDownloadURL();
 
-                FirebaseFirestore.instance
-                    .collection('dishes')
-                    .doc(id)
-                    .set({'name': nameController.text, 'imageURL': imageURL});
+                FirebaseFirestore.instance.collection('dishes').doc(id).set({
+                  'name': nameController.text,
+                  'imageURL': imageURL,
+                  'date': DateTime.now().toIso8601String(),
+                  'credit': creditController.text
+                });
 
                 Navigator.of(context).pop();
               },
