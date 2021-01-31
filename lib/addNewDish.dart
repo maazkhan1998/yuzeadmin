@@ -19,6 +19,10 @@ class _AddDishState extends State<AddDish> {
   TextEditingController nameController = TextEditingController();
   TextEditingController creditController = TextEditingController();
   bool isLoading = false;
+  bool isLunch = false;
+  bool isDinner = false;
+  bool isBreakfast = false;
+  bool isDessert = false;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +129,32 @@ class _AddDishState extends State<AddDish> {
               TextField(
                 controller: creditController,
                 decoration: InputDecoration(hintText: 'Credits'),
-              )
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.all(0),
+                value: isBreakfast,
+                onChanged: (val) => setState(() => isBreakfast = val),
+                title: Text('is Breakfast?'),
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.all(0),
+                value: isLunch,
+                onChanged: (val) => setState(() => isLunch = val),
+                title: Text('is Lunch?'),
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.all(0),
+                value: isDinner,
+                onChanged: (val) => setState(() => isDinner = val),
+                title: Text('is Dinner?'),
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.all(0),
+                value: isDessert,
+                onChanged: (val) => setState(() => isDessert = val),
+                title: Text('is Dessert?'),
+              ),
+              SizedBox(height: ScreenUtil().setHeight(150))
             ],
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -139,6 +168,12 @@ class _AddDishState extends State<AddDish> {
                 if (nameController.text.isEmpty)
                   return Fluttertoast.showToast(
                       msg: 'Add dish name', gravity: ToastGravity.CENTER);
+                if (creditController.text.isEmpty)
+                  return Fluttertoast.showToast(
+                      msg: 'Add Credit', gravity: ToastGravity.CENTER);
+                if (!isBreakfast && !isLunch && !isDinner && !isDessert)
+                  return Fluttertoast.showToast(
+                      msg: 'Select a category', gravity: ToastGravity.CENTER);
                 setState(() => isLoading = true);
                 final String id = DateTime.now().toIso8601String();
                 final ref = await firebasestorage.FirebaseStorage.instance
@@ -152,7 +187,11 @@ class _AddDishState extends State<AddDish> {
                   'name': nameController.text,
                   'imageURL': imageURL,
                   'date': DateTime.now().toIso8601String(),
-                  'credit': creditController.text
+                  'credit': creditController.text,
+                  'isLunch': isLunch,
+                  'isDinner': isDinner,
+                  'isBreakfast': isBreakfast,
+                  'isDessert': isDessert
                 });
 
                 Navigator.of(context).pop();

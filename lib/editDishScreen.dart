@@ -22,10 +22,18 @@ class _EditDishScreenState extends State<EditDishScreen> {
   TextEditingController nameController;
   TextEditingController creditController;
   bool isLoading = false;
+  bool isLunch = false;
+  bool isDinner = false;
+  bool isBreakfast = false;
+  bool isDessert = false;
 
   initState() {
     nameController = TextEditingController(text: widget.dish.name);
     creditController = TextEditingController(text: widget.dish.credit);
+    isLunch = widget.dish.isLunch;
+    isBreakfast = widget.dish.isBreakfast;
+    isDinner = widget.dish.isDinner;
+    isDessert = widget.dish.isDessert;
     super.initState();
   }
 
@@ -167,14 +175,40 @@ class _EditDishScreenState extends State<EditDishScreen> {
                   controller: nameController,
                   decoration: InputDecoration(
                       hintText: 'Dish Name',
-                      contentPadding: EdgeInsets.only(left: 10)),
+                      contentPadding: EdgeInsets.only(left: 30)),
                 ),
                 TextField(
                   controller: creditController,
                   decoration: InputDecoration(
                       hintText: 'Credit',
-                      contentPadding: EdgeInsets.only(left: 10)),
-                )
+                      contentPadding: EdgeInsets.only(left: 30)),
+                ),
+                SizedBox(height: ScreenUtil().setHeight(20)),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  value: isBreakfast,
+                  onChanged: (val) => setState(() => isBreakfast = val),
+                  title: Text('is Breakfast?'),
+                ),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  value: isLunch,
+                  onChanged: (val) => setState(() => isLunch = val),
+                  title: Text('is Lunch?'),
+                ),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  value: isDinner,
+                  onChanged: (val) => setState(() => isDinner = val),
+                  title: Text('is Dinner?'),
+                ),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  value: isDessert,
+                  onChanged: (val) => setState(() => isDessert = val),
+                  title: Text('is Dessert?'),
+                ),
+                SizedBox(height: ScreenUtil().setHeight(150))
               ],
             )),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -185,6 +219,13 @@ class _EditDishScreenState extends State<EditDishScreen> {
                   if (nameController.text.isEmpty)
                     return Fluttertoast.showToast(
                         msg: 'Add dish name', gravity: ToastGravity.CENTER);
+                  if (creditController.text.isEmpty)
+                    return Fluttertoast.showToast(
+                        msg: 'Add Credit', gravity: ToastGravity.CENTER);
+                  if (!isBreakfast && !isLunch && !isDinner && !isDessert)
+                    return Fluttertoast.showToast(
+                        msg: 'Select a category', gravity: ToastGravity.CENTER);
+                  setState(() => isLoading = true);
                   String imageURL;
                   setState(() => isLoading = true);
                   if (image != null) {
@@ -200,8 +241,13 @@ class _EditDishScreenState extends State<EditDishScreen> {
                       .doc(widget.dish.id)
                       .set({
                     'name': nameController.text,
+                    'date': widget.dish.date,
                     'imageURL': image == null ? widget.dish.imageURL : imageURL,
-                    'credit': creditController.text
+                    'credit': creditController.text,
+                    'isLunch': isLunch,
+                    'isDinner': isDinner,
+                    'isBreakfast': isBreakfast,
+                    'isDessert': isDessert
                   });
 
                   Navigator.of(context).pop();

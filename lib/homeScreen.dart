@@ -66,8 +66,23 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => AddDish())),
+          onPressed: () async {
+            Navigator.push(
+                context, CupertinoPageRoute(builder: (context) => AddDish()));
+            // final snapshot =
+            //     await FirebaseFirestore.instance.collection('dishes').get();
+            // snapshot.docs.forEach((element) {
+            //   FirebaseFirestore.instance
+            //       .collection('dishes')
+            //       .doc(element.id)
+            //       .update({
+            //     'isLunch': true,
+            //     'isDinner': false,
+            //     'isBreakfast': false,
+            //     'isDessert': false
+            //   });
+            // });
+          },
           child: Icon(Icons.add, size: 30, color: Colors.white)),
     );
   }
