@@ -168,9 +168,6 @@ class _AddDishState extends State<AddDish> {
                 if (nameController.text.isEmpty)
                   return Fluttertoast.showToast(
                       msg: 'Add dish name', gravity: ToastGravity.CENTER);
-                if (creditController.text.isEmpty)
-                  return Fluttertoast.showToast(
-                      msg: 'Add Credit', gravity: ToastGravity.CENTER);
                 if (!isBreakfast && !isLunch && !isDinner && !isDessert)
                   return Fluttertoast.showToast(
                       msg: 'Select a category', gravity: ToastGravity.CENTER);
@@ -187,7 +184,9 @@ class _AddDishState extends State<AddDish> {
                   'name': nameController.text,
                   'imageURL': imageURL,
                   'date': DateTime.now().toIso8601String(),
-                  'credit': creditController.text,
+                  'credit': creditController.text.isEmpty
+                      ? ''
+                      : creditController.text.isEmpty,
                   'isLunch': isLunch,
                   'isDinner': isDinner,
                   'isBreakfast': isBreakfast,

@@ -17,6 +17,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
