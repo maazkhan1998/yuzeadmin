@@ -186,7 +186,7 @@ class _AddDishState extends State<AddDish> {
                   'date': DateTime.now().toIso8601String(),
                   'credit': creditController.text.isEmpty
                       ? ''
-                      : creditController.text.isEmpty,
+                      : creditController.text,
                   'isLunch': isLunch,
                   'isDinner': isDinner,
                   'isBreakfast': isBreakfast,

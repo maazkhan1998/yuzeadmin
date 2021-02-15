@@ -242,7 +242,7 @@ class _EditDishScreenState extends State<EditDishScreen> {
                     'imageURL': image == null ? widget.dish.imageURL : imageURL,
                     'credit': creditController.text.isEmpty
                         ? ''
-                        : creditController.text.isEmpty,
+                        : creditController.text,
                     'isLunch': isLunch,
                     'isDinner': isDinner,
                     'isBreakfast': isBreakfast,
