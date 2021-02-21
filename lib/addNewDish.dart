@@ -18,6 +18,8 @@ class _AddDishState extends State<AddDish> {
   final picker = ImagePicker();
   TextEditingController nameController = TextEditingController();
   TextEditingController creditController = TextEditingController();
+  TextEditingController linkController = TextEditingController();
+
   bool isLoading = false;
   bool isLunch = false;
   bool isDinner = false;
@@ -130,6 +132,11 @@ class _AddDishState extends State<AddDish> {
                 controller: creditController,
                 decoration: InputDecoration(hintText: 'Credits'),
               ),
+              SizedBox(height: ScreenUtil().setHeight(20)),
+              TextField(
+                controller: linkController,
+                decoration: InputDecoration(hintText: 'Link'),
+              ),
               CheckboxListTile(
                 contentPadding: EdgeInsets.all(0),
                 value: isBreakfast,
@@ -168,9 +175,11 @@ class _AddDishState extends State<AddDish> {
                 if (nameController.text.isEmpty)
                   return Fluttertoast.showToast(
                       msg: 'Add dish name', gravity: ToastGravity.CENTER);
-                if (!isBreakfast && !isLunch && !isDinner && !isDessert)
+                if (linkController.text.isNotEmpty &&
+                    creditController.text.isEmpty)
                   return Fluttertoast.showToast(
-                      msg: 'Select a category', gravity: ToastGravity.CENTER);
+                      msg: 'Add a credit to add a link',
+                      gravity: ToastGravity.CENTER);
                 setState(() => isLoading = true);
                 final String id = DateTime.now().toIso8601String();
                 final ref = await firebasestorage.FirebaseStorage.instance
@@ -190,7 +199,9 @@ class _AddDishState extends State<AddDish> {
                   'isLunch': isLunch,
                   'isDinner': isDinner,
                   'isBreakfast': isBreakfast,
-                  'isDessert': isDessert
+                  'isDessert': isDessert,
+                  'link':
+                      linkController.text.isEmpty ? null : linkController.text
                 });
 
                 Navigator.of(context).pop();

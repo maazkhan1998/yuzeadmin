@@ -21,6 +21,7 @@ class _EditDishScreenState extends State<EditDishScreen> {
   final picker = ImagePicker();
   TextEditingController nameController;
   TextEditingController creditController;
+  TextEditingController linkController;
   bool isLoading = false;
   bool isLunch = false;
   bool isDinner = false;
@@ -30,6 +31,8 @@ class _EditDishScreenState extends State<EditDishScreen> {
   initState() {
     nameController = TextEditingController(text: widget.dish.name);
     creditController = TextEditingController(text: widget.dish.credit);
+    linkController =
+        TextEditingController(text: widget.dish.link ?? widget.dish.link);
     isLunch = widget.dish.isLunch;
     isBreakfast = widget.dish.isBreakfast;
     isDinner = widget.dish.isDinner;
@@ -183,6 +186,12 @@ class _EditDishScreenState extends State<EditDishScreen> {
                       hintText: 'Credit',
                       contentPadding: EdgeInsets.only(left: 30)),
                 ),
+                TextField(
+                  controller: linkController,
+                  decoration: InputDecoration(
+                      hintText: 'Link',
+                      contentPadding: EdgeInsets.only(left: 30)),
+                ),
                 SizedBox(height: ScreenUtil().setHeight(20)),
                 CheckboxListTile(
                   contentPadding: EdgeInsets.all(0),
@@ -219,10 +228,11 @@ class _EditDishScreenState extends State<EditDishScreen> {
                   if (nameController.text.isEmpty)
                     return Fluttertoast.showToast(
                         msg: 'Add dish name', gravity: ToastGravity.CENTER);
-                  if (!isBreakfast && !isLunch && !isDinner && !isDessert)
+                  if (linkController.text.isNotEmpty &&
+                      creditController.text.isEmpty)
                     return Fluttertoast.showToast(
-                        msg: 'Select a category', gravity: ToastGravity.CENTER);
-                  setState(() => isLoading = true);
+                        msg: 'Add credit to add a link',
+                        gravity: ToastGravity.CENTER);
                   String imageURL;
                   setState(() => isLoading = true);
                   if (image != null) {
@@ -246,7 +256,9 @@ class _EditDishScreenState extends State<EditDishScreen> {
                     'isLunch': isLunch,
                     'isDinner': isDinner,
                     'isBreakfast': isBreakfast,
-                    'isDessert': isDessert
+                    'isDessert': isDessert,
+                    'link':
+                        linkController.text.isEmpty ? null : linkController.text
                   });
 
                   Navigator.of(context).pop();
