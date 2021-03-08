@@ -7,6 +7,8 @@ import 'package:foodsuggestionadmin/dish.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebasestorage;
+import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as Im;
 
 class EditDishScreen extends StatefulWidget {
   Dish dish;
@@ -38,6 +40,17 @@ class _EditDishScreenState extends State<EditDishScreen> {
     isDinner = widget.dish.isDinner;
     isDessert = widget.dish.isDessert;
     super.initState();
+  }
+
+  compressImage() async {
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    Im.Image imageFile = Im.decodeImage(image.readAsBytesSync());
+    final compressedImageFile = File('$path/yuze.jpg')
+      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
+    setState(() {
+      image = compressedImageFile;
+    });
   }
 
   deleteDialg(BuildContext context) {
@@ -236,6 +249,7 @@ class _EditDishScreenState extends State<EditDishScreen> {
                   String imageURL;
                   setState(() => isLoading = true);
                   if (image != null) {
+                    await compressImage();
                     final ref = await firebasestorage.FirebaseStorage.instance
                         .ref()
                         .child('dishes')

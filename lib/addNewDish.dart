@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as Im;
+import 'package:path_provider/path_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebasestorage;
 
 class AddDish extends StatefulWidget {
@@ -25,6 +27,17 @@ class _AddDishState extends State<AddDish> {
   bool isDinner = false;
   bool isBreakfast = false;
   bool isDessert = false;
+
+  compressImage() async {
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    Im.Image imageFile = Im.decodeImage(image.readAsBytesSync());
+    final compressedImageFile = File('$path/yuze.jpg')
+      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
+    setState(() {
+      image = compressedImageFile;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +195,7 @@ class _AddDishState extends State<AddDish> {
                       gravity: ToastGravity.CENTER);
                 setState(() => isLoading = true);
                 final String id = DateTime.now().toIso8601String();
+                await compressImage();
                 final ref = await firebasestorage.FirebaseStorage.instance
                     .ref()
                     .child('dishes')
