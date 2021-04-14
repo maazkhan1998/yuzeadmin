@@ -33,7 +33,7 @@ class _AddDishState extends State<AddDish> {
     final path = tempDir.path;
     Im.Image imageFile = Im.decodeImage(image.readAsBytesSync());
     final compressedImageFile = File('$path/yuze.jpg')
-      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
+      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 25));
     setState(() {
       image = compressedImageFile;
     });

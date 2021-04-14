@@ -47,7 +47,7 @@ class _EditDishScreenState extends State<EditDishScreen> {
     final path = tempDir.path;
     Im.Image imageFile = Im.decodeImage(image.readAsBytesSync());
     final compressedImageFile = File('$path/yuze.jpg')
-      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
+      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 40));
     setState(() {
       image = compressedImageFile;
     });
@@ -262,7 +262,7 @@ class _EditDishScreenState extends State<EditDishScreen> {
                       .doc(widget.dish.id)
                       .set({
                     'name': nameController.text,
-                    'date': widget.dish.date,
+                    'date': DateTime.now().toIso8601String(),
                     'imageURL': image == null ? widget.dish.imageURL : imageURL,
                     'credit': creditController.text.isEmpty
                         ? ''

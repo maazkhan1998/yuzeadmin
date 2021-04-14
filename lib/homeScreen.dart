@@ -32,7 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.notifications_active, color: Colors.white),
             onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => NotificationScreen())),
-          )
+          ),
+          GestureDetector(
+              child: Center(child: Text('OTN')),
+              onTap: () => setState(() => mainQuery = FirebaseFirestore.instance
+                  .collection('dishes')
+                  .orderBy('date', descending: false))),
+          SizedBox(width: ScreenUtil().setWidth(20)),
+          GestureDetector(
+              child: Center(child: Text('NTO')),
+              onTap: () => setState(() => mainQuery = FirebaseFirestore.instance
+                  .collection('dishes')
+                  .orderBy('date', descending: true))),
+          SizedBox(width: ScreenUtil().setWidth(20))
         ],
       ),
       body: SafeArea(
